@@ -1,6 +1,21 @@
 const {BrowserWindow, app, Menu, Tray, ipcMain} = require('electron')
-const path = require('path')
-require('update-electron-app')()
+const { startBot, stopBot } = require('./service/index')
+const path  = require('path')
+const fs      = require('fs')
+const util    = require('util')
+
+const logPath = 'upgrade.log'
+const logFile = fs.createWriteStream(logPath, { flags: 'a' })
+
+console.log = function() {
+    logFile.write(util.format.apply(null, arguments) + '\n')
+    process.stdout.write(util.format.apply(null, arguments) + '\n')
+}
+
+console.error = function() {
+    logFile.write(util.format.apply(null, arguments) + '\n')
+    process.stderr.write(util.format.apply(null, arguments) + '\n')
+}
 let mainWindow = null
 let appTray = null
 
@@ -9,6 +24,9 @@ const createWindow = () => {
         width: 800,
         height: 600,
         webPreferences: {
+            enableRemoteModule:true,
+            nodeIntegration : true,  // 为了解决require 识别问题
+            contextIsolation : false, //允许渲染进程使用Nodejs
             preload: path.join(__dirname, 'preload.js')
         }
     })
@@ -34,7 +52,8 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
     // 监听前端页面调用的方法
-    ipcMain.on('set-title', handleSetTitle)
+    ipcMain.on('startBot', handleStartBot)
+    ipcMain.on('stopBot', handleStopBot)
 })
 
 
@@ -47,8 +66,9 @@ app.on('window-all-closed', function () {
     }
 })
 
-function handleSetTitle (event, title) {
-    const webContents = event.sender
-    const win = BrowserWindow.fromWebContents(webContents)
-    win.setTitle(title)
+function handleStartBot (event, key, secret ) {
+    startBot(key, secret)
+}
+function handleStopBot() {
+    stopBot()
 }

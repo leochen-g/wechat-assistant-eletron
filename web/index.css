@@ -1,0 +1,7 @@
+#log-wrap {
+    width: 100%;
+    padding: 20px;
+    height: 300px;
+    overflow-y: scroll;
+    white-space: pre-wrap;
+}

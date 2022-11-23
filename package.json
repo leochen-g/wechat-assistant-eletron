@@ -8,6 +8,8 @@
     "dev": "electron .",
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "package:win": "electron-forge package --arch x64 --platform win32",
+    "make:win": "electron-forge make --arch x64 --platform win32",
     "make": "electron-forge make",
     "publish": "electron-forge publish"
   },
@@ -22,11 +24,13 @@
     "@electron-forge/publisher-github": "^6.0.3",
     "electron": "^21.3.0"
   },
+  "repository": "https://github.com/leochen-g/wechat-assistant-eletron",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "update-electron-app": "^2.0.1",
     "wechaty": "^1.20.2",
-    "wechaty-puppet-wechat4u": "^1.13.11"
+    "wechaty-puppet-wechat4u": "^1.13.11",
+    "wechaty-web-panel": "^1.2.1"
   },
   "config": {
     "forge": {
@@ -41,6 +45,39 @@
             "prerelease": false,
             "draft": true
           }
+        }
+      ],
+      "packagerConfig": {
+        "appVersion": "0.0.1",
+        "name": "智能微秘书客户端",
+        "appCopyright": "Leo_chen",
+        "icon": "./assets/img/appIcon/favicon",
+        "win32metadata": {
+          "ProductName": "智能微秘书 Windows",
+          "CompanyName": "aibotk.com",
+          "FileDescription": "智能微秘书客户端"
+        }
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "electron_demo"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
         }
       ]
     }

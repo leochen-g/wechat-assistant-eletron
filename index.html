@@ -4,14 +4,20 @@
   <meta charset="UTF-8">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <title>Hello World!</title>
-</head>
+  <title>智能微秘书</title>
+  <link href="./web/index.css" rel="stylesheet"/></head>
 <body>
-<h1>Hello World!</h1>
+<h1>智能微秘书</h1>
 <div id="info"></div>
-<！-- 您也可以此进程中运行其他文件 -->
-Title: <input id="title"/>
-<button id="btn" type="button">Set</button>
+<div>
+  APIKEY: <input id="apikey" type="text">
+</div>
+<div>
+  APISecret: <input id="apisecret" type="text">
+</div>
+<button id="start" type="button">启动</button>
+<button id="stop" type="button">停止</button>
+<div id="log-wrap"></div>
 <script src="./web/renderer.js"></script>
 </body>
 </html>
