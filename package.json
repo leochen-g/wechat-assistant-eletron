@@ -36,20 +36,20 @@
     "forge": {
       "packagerConfig": {
         "appVersion": "0.0.1",
-        "name": "智能微秘书",
+        "name": "WechatAssistant",
         "appCopyright": "Leo_chen",
         "icon": "./assets/icons/favicon",
         "win32metadata": {
-          "ProductName": "智能微秘书 Windows",
+          "ProductName": "WechatAssistant",
           "CompanyName": "aibotk.com",
-          "FileDescription": "智能微秘书 客户端"
+          "FileDescription": "wechat assistant product"
         }
       },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "Wechat assistant"
+            "name": "WechatAssistant"
           }
         },
         {
