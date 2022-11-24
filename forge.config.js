@@ -1,3 +1,12 @@
+const path = require('path');
+const iconDir = path.resolve(__dirname, 'assets', 'icons');
+
+const commonLinuxConfig = {
+    icon: {
+        scalable: path.resolve(iconDir, 'fiddle.svg'),
+    },
+    mimeType: ['x-scheme-handler/electron-fiddle'],
+};
 module.exports = {
     publishers: [
         {
@@ -14,20 +23,33 @@ module.exports = {
     ],
     packagerConfig: {
         "appVersion": "0.0.1",
-        "name": "智能微秘书客户端",
+        asar: true,
+        "name": "wechat-assistant",
         "appCopyright": "Leo_chen",
-        "icon": "./assets/img/appIcon/favicon",
+        "icon": path.resolve(__dirname, 'assets', 'icons', 'favicon'),
+        appBundleId: 'com.electron.aibotk',
         "win32metadata": {
-            "ProductName": "智能微秘书 Windows",
+            "ProductName": "wechat-assistant",
             "CompanyName": "aibotk.com",
-            "FileDescription": "智能微秘书客户端"
+            "FileDescription": "wechat-assistant"
         }
     },
     rebuildConfig: {},
     makers: [
         {
             name: '@electron-forge/maker-squirrel',
-            config: {},
+            platforms: ['win32'],
+            config: (arch) => ({
+                name: 'wechat-assistant',
+                authors: 'Leo_chen',
+                exe: 'wechat-assistant.exe',
+                iconUrl:
+                    'https://raw.githubusercontent.com/electron/fiddle/0119f0ce697f5ff7dec4fe51f17620c78cfd488b/assets/icons/fiddle.ico',
+                loadingGif: './assets/loading.gif',
+                noMsi: true,
+                setupExe: `wechat-assistant-win32-setup.exe`,
+                setupIcon: path.resolve(iconDir, 'favicon.ico'),
+            }),
         },
         {
             name: '@electron-forge/maker-zip',
@@ -35,7 +57,8 @@ module.exports = {
         },
         {
             name: '@electron-forge/maker-deb',
-            config: {},
+            platforms: ['linux'],
+            config: commonLinuxConfig,
         },
         {
             name: '@electron-forge/maker-rpm',
