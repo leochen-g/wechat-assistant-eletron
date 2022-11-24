@@ -1,6 +1,6 @@
 {
   "name": "wechat-assistant-eletron",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "wechat-assistant",
   "main": "main.js",
   "scripts": {
@@ -30,12 +30,12 @@
     "electron-squirrel-startup": "^1.0.0",
     "wechaty": "^1.20.2",
     "wechaty-puppet-wechat4u": "^1.13.11",
-    "wechaty-web-panel": "^1.2.3"
+    "wechaty-web-panel": "^1.2.4"
   },
   "config": {
     "forge": {
       "packagerConfig": {
-        "appVersion": "0.0.1",
+        "appVersion": "0.0.2",
         "name": "WechatAssistant",
         "appCopyright": "Leo_chen",
         "icon": "./assets/icons/favicon",

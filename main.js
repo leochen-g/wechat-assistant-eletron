@@ -1,10 +1,21 @@
-const {BrowserWindow, app, Menu, Tray, ipcMain} = require('electron')
+const {BrowserWindow, app, ipcMain} = require('electron')
 const { startBot, stopBot } = require('./service/index')
 const path  = require('path')
 const fs      = require('fs')
 const util    = require('util')
+const os  = require('os')
 
-const logPath = 'upgrade.log'
+const baseDir = path.join(
+    os.homedir(),
+    path.sep,
+    ".wechaty",
+    "wechat-assistant-cache",
+    path.sep,
+    "electron",
+    path.sep,
+);
+
+const logPath = baseDir + 'upgrade.log'
 const logFile = fs.createWriteStream(logPath, { flags: 'a' })
 
 console.log = function() {
@@ -30,7 +41,6 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    ipcMain.handle('ping', () => 'pong')
     mainWindow.loadFile('index.html')
     // 打开开发工具
     mainWindow.webContents.openDevTools()
@@ -41,6 +51,7 @@ const createWindow = () => {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null
+        handleStopBot()
     })
 }
 
@@ -63,6 +74,7 @@ app.on('window-all-closed', function () {
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
         app.quit()
+        handleStopBot()
     }
 })
 

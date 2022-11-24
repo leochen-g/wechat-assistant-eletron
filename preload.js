@@ -3,6 +3,20 @@
  */
 const { ipcRenderer } = require('electron')
 const fs = require("fs");
+const os  = require('os')
+const path = require("path");
+
+const baseDir = path.join(
+    os.homedir(),
+    path.sep,
+    ".wechaty",
+    "wechat-assistant-cache",
+    path.sep,
+    "electron",
+    path.sep,
+);
+
+const logPath = baseDir + 'upgrade.log'
 
 function startBot(key, secret) {
     ipcRenderer.send('startBot', key, secret)
@@ -34,7 +48,7 @@ window.onload = () => {
         startBot(key, secret)
         if (!interval) {
             interval = setInterval(() => {
-                fs.readFile("upgrade.log", (err, data) => {
+                fs.readFile(logPath, (err, data) => {
                     if (err) {
                         return;
                     }
