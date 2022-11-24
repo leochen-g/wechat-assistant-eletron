@@ -1,7 +1,7 @@
 {
   "name": "wechat-assistant-eletron",
   "version": "1.0.0",
-  "description": "",
+  "description": "wechat-assistant",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,7 +13,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish"
   },
-  "author": "",
+  "author": "Leo_chen",
   "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.3",
