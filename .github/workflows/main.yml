@@ -62,5 +62,5 @@ jobs:
                 out/**/*.rpm
                 out/**/*.zip
                 out/**/RELEASES
-              env:
-                GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+            env:
+              GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
