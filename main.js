@@ -3,20 +3,15 @@ const { startBot, stopBot } = require('./service/index')
 const path  = require('path')
 const fs      = require('fs')
 const util    = require('util')
-const os  = require('os')
 
-const baseDir = path.join(
-    os.homedir(),
-    path.sep,
-    ".wechaty",
-    "wechat-assistant-cache",
-    path.sep,
-    "electron",
-    path.sep,
-);
+const TEMPPATH = 'temp'
+const basePath = path.join(app.getPath('userData'), TEMPPATH)
+fs.mkdir(basePath, { recursive: true }, err => {
+    if (err) console.log(`mkdir path: ${basePath} err`)
+})
 
-const logPath = baseDir + 'upgrade.log'
-const logFile = fs.createWriteStream(logPath, { flags: 'a' })
+const logPath = basePath + 'upgrade.log'
+const logFile = fs.createWriteStream(logPath, { flags: 'w' })
 
 console.log = function() {
     logFile.write(util.format.apply(null, arguments) + '\n')
@@ -29,11 +24,15 @@ console.error = function() {
 }
 let mainWindow = null
 let appTray = null
-
+try {
+    require('electron-reloader')(module);
+} catch (_) { }
 const createWindow = () => {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        frame: false,
+        resizable: false,
         webPreferences: {
             enableRemoteModule:true,
             nodeIntegration : true,  // 为了解决require 识别问题
@@ -63,7 +62,7 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
     // 监听前端页面调用的方法
-    ipcMain.on('startBot', handleStartBot)
+    ipcMain.handle('startBot', handleStartBot)
     ipcMain.on('stopBot', handleStopBot)
 })
 
@@ -80,6 +79,7 @@ app.on('window-all-closed', function () {
 
 function handleStartBot (event, key, secret ) {
     startBot(key, secret)
+    return logPath
 }
 function handleStopBot() {
     stopBot()

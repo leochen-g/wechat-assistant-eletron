@@ -1,30 +1,23 @@
 /**
  * 暴漏内部方法给前端页面
  */
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, shell } = require('electron')
 const fs = require("fs");
-const os  = require('os')
-const path = require("path");
 
-const baseDir = path.join(
-    os.homedir(),
-    path.sep,
-    ".wechaty",
-    "wechat-assistant-cache",
-    path.sep,
-    "electron",
-    path.sep,
-);
-
-const logPath = baseDir + 'upgrade.log'
-
-function startBot(key, secret) {
-    ipcRenderer.send('startBot', key, secret)
+async function startBot(key, secret) {
+    return await ipcRenderer.invoke('startBot', key, secret)
 }
 function stopBot() {
     ipcRenderer.send('stopBot')
 }
-
+const links = document.querySelectorAll('a[href]')
+links.forEach(link => {
+    link.addEventListener('click', e => {
+        const url = link.getAttribute('href');
+        e.preventDefault();
+        shell.openExternal(url);
+    });
+});
 window.onload = () => {
     const startButton = document.getElementById('start')
     const stopButton = document.getElementById('stop')
@@ -38,21 +31,25 @@ window.onload = () => {
     if(localStorage.getItem('secret')) {
         apisecretInput.value = localStorage.getItem('secret')
     }
-    startButton.addEventListener('click', () => {
+    startButton.addEventListener('click', async () => {
         const key = apikeyInput.value
         const secret = apisecretInput.value
         if (key && secret) {
             localStorage.setItem('key', key)
             localStorage.setItem('secret', secret)
         }
-        startBot(key, secret)
+        const logPath = await startBot(key, secret)
         if (!interval) {
             interval = setInterval(() => {
-                fs.readFile(logPath, (err, data) => {
-                    if (err) {
-                        return;
+                fs.access(logPath, (err) => {
+                    if (!err) {
+                        fs.readFile(logPath, (err, data) => {
+                            if (err) {
+                                return;
+                            }
+                            logDom.innerHTML = data;
+                        })
                     }
-                    logDom.innerHTML = data;
                 })
             }, 2000)
         }
@@ -64,6 +61,7 @@ window.onload = () => {
             clearInterval(interval)
             interval = null
         }
+        logDom.innerHTML = ''
     })
 
 }
